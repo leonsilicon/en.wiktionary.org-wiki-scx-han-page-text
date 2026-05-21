@@ -89,9 +89,13 @@ async function scanIndex(indexPath: string): Promise<IndexScan> {
     const { offset, title } = rec;
 
     if (lastOffset !== null && offset !== lastOffset) {
-      // We just crossed into a new stream — fix the previous stream's end
-      // only if we actually need that stream.
-      if (offsetToTitles.has(lastOffset) && !offsetToEndOffset.has(lastOffset)) {
+      // Crossed into a new stream — the previous stream's end is this
+      // offset. Record it for every stream, not just ones with Han titles:
+      // a previous Han-only filter here meant that if the title-collection
+      // step ever added a stream to offsetToTitles *after* we'd passed it
+      // (impossible today, but defensively cheap to cover), its end-offset
+      // would be missing.
+      if (!offsetToEndOffset.has(lastOffset)) {
         offsetToEndOffset.set(lastOffset, offset);
       }
     }
@@ -330,6 +334,15 @@ async function main(): Promise<void> {
     }
     bucket[title] = pages.get(title)!;
   }
+
+  // Wipe stale bucket files from a previous run so we don't ship deleted
+  // entries.
+  const existing = await fsp.readdir(OUT_DIR).catch(() => [] as string[]);
+  await Promise.all(
+    existing
+      .filter((f) => f.endsWith(".json"))
+      .map((f) => fsp.rm(path.join(OUT_DIR, f), { force: true })),
+  );
 
   await Promise.all(
     [...buckets].map(([key, obj]) =>

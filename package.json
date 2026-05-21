@@ -47,7 +47,6 @@
     "test": "vp test",
     "check": "vp check",
     "parse": "node --experimental-strip-types scripts/parse.ts",
-    "prepublishOnly": "vp run build",
     "prepare": "vp config"
   },
   "devDependencies": {
