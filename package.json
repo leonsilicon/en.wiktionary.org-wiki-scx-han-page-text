@@ -1,6 +1,6 @@
 {
   "name": "en.wiktionary.org-wiki-scx-han-page-text",
-  "version": "0.20260501.0",
+  "version": "0.20260501.1",
   "description": "Wiktionary page text for every Han-script character (Script_Extensions=Han), extracted from the English Wiktionary dump and exposed via per-character dynamic imports.",
   "homepage": "https://github.com/leonsilicon/en.wiktionary.org-wiki-scx-han-page-text#readme",
   "bugs": {
