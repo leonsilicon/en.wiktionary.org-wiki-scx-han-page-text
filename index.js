@@ -1,4 +1,4 @@
-export const characters = {
+const wiktionaryPages = {
 	"·": async () => (await import('./unicode/0xx.json', { with: { type: 'json' } })).default["·"],
 	"⺀": async () => (await import('./unicode/2exx.json', { with: { type: 'json' } })).default["⺀"],
 	"⺁": async () => (await import('./unicode/2exx.json', { with: { type: 'json' } })).default["⺁"],
@@ -41787,3 +41787,5 @@ export const characters = {
 	"､": async () => (await import('./unicode/ffxx.json', { with: { type: 'json' } })).default["､"],
 	"･": async () => (await import('./unicode/ffxx.json', { with: { type: 'json' } })).default["･"],
 };
+
+export default wiktionaryPages;

@@ -20,7 +20,6 @@ const INDEX_FILE =
   ENWIKTIONARY_PAGES_ARTICLES_MULTISTREAM_INDEX_TXT_BZ2_FILEPATH;
 const OUT_DIR = process.argv[4] ?? join(import.meta.url, "../unicode");
 const INDEX_FILE_PATH = join(import.meta.url, "../index.js");
-const INDEX_DTS_PATH = join(import.meta.url, "../index.d.ts");
 const OUT_DIR_NAME = path.basename(OUT_DIR);
 
 const normalizeTitle = (s: string): string => s.normalize("NFC");
@@ -359,19 +358,6 @@ async function main(): Promise<void> {
   indexLines.push("};", "", "export default wiktionaryPages;", "");
   await fsp.writeFile(INDEX_FILE_PATH, indexLines.join("\n"), "utf8");
   console.log(`🗂️ Wrote character index -> ${INDEX_FILE_PATH}`);
-
-  const dtsLines: string[] = [
-    "export type WiktionaryPageValue = string | [string];",
-    "",
-    "declare const wiktionaryPages: {",
-  ];
-  for (const title of [...titleToBucket.keys()].sort()) {
-    const titleLiteral = JSON.stringify(title);
-    dtsLines.push(`\t${titleLiteral}: () => Promise<WiktionaryPageValue>;`);
-  }
-  dtsLines.push("};", "", "export default wiktionaryPages;", "");
-  await fsp.writeFile(INDEX_DTS_PATH, dtsLines.join("\n"), "utf8");
-  console.log(`🗂️ Wrote character index types -> ${INDEX_DTS_PATH}`);
 }
 
 main().catch((err: unknown) => {
